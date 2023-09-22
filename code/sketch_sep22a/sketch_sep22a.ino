@@ -13,6 +13,31 @@ bool buttonOnPrev = false;
 int beats[] = { 2.0, 3.0, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 2.0, 2.0,
                 2.0, 3.0, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 2.0, 2.0  
 };
+bool array1[][8] = { 
+  //1RED, 1YELLOW, 1GREEN, 2RED, 2YELLOW, 2GREEN
+  {1, 0, 0, 1, 1, 0}, // beat 1
+  {1, 0, 0, 0, 0, 1}, // beat 2
+  {1, 0, 0, 0, 0, 0}, // beat 3
+  {1, 0, 0, 0, 0, 1}, // beat 4
+  {1, 0, 0, 0, 0, 0}, // beat 5
+  {1, 0, 0, 0, 0, 1}, // beat 6
+  {1, 0, 0, 0, 0, 0}, // beat 7
+  {1, 0, 0, 0, 0, 1}, // beat 8
+  {1, 0, 0, 0, 1, 0}, // beat 9
+  {1, 0, 0, 1, 0, 0}, // beat 10
+  {1, 1, 0, 1, 0, 0}, // beat 11
+  {0, 0, 1, 1, 0, 0}, // beat 12
+  {0, 0, 0, 1, 0, 0}, // beat 13
+  {0, 0, 1, 1, 0, 0}, // beat 14
+  {0, 0, 0, 1, 0, 0}, // beat 15
+  {0, 0, 1, 1, 0, 0}, // beat 16
+  {0, 0, 0, 1, 0, 0}, // beat 17
+  {0, 0, 1, 1, 0, 0}, // beat 18
+  {0, 1, 0, 1, 0, 0}, // beat 19
+  {1, 0, 0, 1, 0, 0}, // beat 20
+};
+
+int beatsCount = 20;
 
 void setup() {
 	pinMode(buttonPin, INPUT);
@@ -40,17 +65,27 @@ bool buttonReadOnce() {
 }
 
 void loop() {
-  if (buttonReadOnce()) {  
-    tone(speakerPin, 880); // генерируем звук с частотой 100 Гц
-    digitalWrite(trafficLight1G, 1);
-    digitalWrite(trafficLight2G, 1);
-    delay(100); // пауза 100 миллисекунд
-  }
-  else {
-    digitalWrite(trafficLight1G, 0);
-    digitalWrite(trafficLight2G, 0);
-    noTone(speakerPin); // выключаем звук
+  for (int i = 1; i <= beatsCount; i++)
+  {
+
+    int delayOnBeat = beats[i];
+    if  (buttonReadOnce() && (i == 10 || i == 20) ) { 
+      delayOnBeat = delayOnBeat + 5;
+    }
+    delay(delayOnBeat);
   }
 
   Serial.println(buttonReadOnce());
+
+    // if (buttonReadOnce()) {  
+    //   tone(speakerPin, 880); // генерируем звук с частотой 100 Гц
+    //   digitalWrite(trafficLight1G, 1);
+    //   digitalWrite(trafficLight2G, 1);
+    //   delay(100); // пауза 100 миллисекунд
+    // }
+    // else {
+    //   digitalWrite(trafficLight1G, 0);
+    //   digitalWrite(trafficLight2G, 0);
+    //   noTone(speakerPin); // выключаем звук
+    // }
 }
