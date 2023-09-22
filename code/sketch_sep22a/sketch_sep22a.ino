@@ -10,10 +10,11 @@ int speakerPin = 9;
 bool buttonOn = false;
 bool buttonOnPrev = false;
 
-int beats[] = { 2000, 3000, 500, 500, 500, 500, 500, 500, 2000, 2000,
-                2000, 3000, 500, 500, 500, 500, 500, 500, 2000, 2000  
+const int beatsCount = 20;
+int beats[beatsCount] = { 2000, 3000, 500, 500, 500, 500, 500, 500, 2000, 2000,
+                          2000, 3000, 500, 500, 500, 500, 500, 500, 2000, 2000  
 };
-bool lightMatrix[][6] = { 
+bool lightMatrix[beatsCount][6] = { 
   //1RED, 1YELLOW, 1GREEN, 2RED, 2YELLOW, 2GREEN
   {1, 0, 0, 1, 1, 0}, // beat 1
   {1, 0, 0, 0, 0, 1}, // beat 2
@@ -37,7 +38,6 @@ bool lightMatrix[][6] = {
   {1, 0, 0, 1, 0, 0}, // beat 20
 };
 
-int beatsCount = 20;
 
 void setup() {
 	pinMode(buttonPin, INPUT);
@@ -55,6 +55,7 @@ bool buttonReadOnce() {
   buttonOn = digitalRead(buttonPin);
   bool retVal = false;
 	if (buttonOn & !buttonOnPrev) {
+    tone(speakerPin, 880, 100);
     retVal = true;
   }
   else{
@@ -87,8 +88,8 @@ void loop() {
 
     int delayOnBeat = beats[i];
     if  ((i == 9 || i == 19)) {
-      delayOnBeat = pedestrainDelay;
-      //tone(speakerPin, 800);
+        delayOnBeat = delayOnBeat + pedestrainDelay;
+        pedestrainDelay = 0;
     }
     Serial.println("Beat number: ");
     Serial.println(i);
@@ -97,7 +98,7 @@ void loop() {
     for (int j = 0; j <= delayOnBeat; j = j + 10) {
       if  (buttonReadOnce()) { 
         pedestrainDelay = 5000;
-      }
+      } 
       delay(10);
     }
     noTone(speakerPin);
