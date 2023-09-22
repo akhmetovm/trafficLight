@@ -10,10 +10,10 @@ int speakerPin = 9;
 bool buttonOn = false;
 bool buttonOnPrev = false;
 
-int beats[] = { 2.0, 3.0, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 2.0, 2.0,
-                2.0, 3.0, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 2.0, 2.0  
+int beats[] = { 2000, 3000, 500, 500, 500, 500, 500, 500, 2000, 2000,
+                2000, 3000, 500, 500, 500, 500, 500, 500, 2000, 2000  
 };
-bool array1[][8] = { 
+bool lightMatrix[][6] = { 
   //1RED, 1YELLOW, 1GREEN, 2RED, 2YELLOW, 2GREEN
   {1, 0, 0, 1, 1, 0}, // beat 1
   {1, 0, 0, 0, 0, 1}, // beat 2
@@ -64,28 +64,42 @@ bool buttonReadOnce() {
   return retVal;
 }
 
+void trafficLightSwitcher(bool sw[]) {
+  digitalWrite(trafficLight1R, 0);
+  digitalWrite(trafficLight1Y, 0);
+  digitalWrite(trafficLight1G, 0);
+  digitalWrite(trafficLight2R, 0);
+  digitalWrite(trafficLight2Y, 0);
+  digitalWrite(trafficLight2G, 0);
+  digitalWrite(trafficLight1R, sw[0]);
+  digitalWrite(trafficLight1Y, sw[1]);
+  digitalWrite(trafficLight1G, sw[2]);
+  digitalWrite(trafficLight2R, sw[3]);
+  digitalWrite(trafficLight2Y, sw[4]);
+  digitalWrite(trafficLight2G, sw[5]);
+}
+
 void loop() {
-  for (int i = 1; i <= beatsCount; i++)
+  int pedestrainDelay = 0;
+  for (int i = 0; i < beatsCount; i++)
   {
+    trafficLightSwitcher(lightMatrix[i]);
 
     int delayOnBeat = beats[i];
-    if  (buttonReadOnce() && (i == 10 || i == 20) ) { 
-      delayOnBeat = delayOnBeat + 5;
+    if  ((i == 9 || i == 19)) {
+      delayOnBeat = pedestrainDelay;
+      //tone(speakerPin, 800);
     }
-    delay(delayOnBeat);
+    Serial.println("Beat number: ");
+    Serial.println(i);
+    Serial.println("Waiting: ");
+    Serial.println(delayOnBeat);
+    for (int j = 0; j <= delayOnBeat; j = j + 10) {
+      if  (buttonReadOnce()) { 
+        pedestrainDelay = 5000;
+      }
+      delay(10);
+    }
+    noTone(speakerPin);
   }
-
-  Serial.println(buttonReadOnce());
-
-    // if (buttonReadOnce()) {  
-    //   tone(speakerPin, 880); // генерируем звук с частотой 100 Гц
-    //   digitalWrite(trafficLight1G, 1);
-    //   digitalWrite(trafficLight2G, 1);
-    //   delay(100); // пауза 100 миллисекунд
-    // }
-    // else {
-    //   digitalWrite(trafficLight1G, 0);
-    //   digitalWrite(trafficLight2G, 0);
-    //   noTone(speakerPin); // выключаем звук
-    // }
 }
