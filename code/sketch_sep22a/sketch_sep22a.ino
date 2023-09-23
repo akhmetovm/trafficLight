@@ -38,7 +38,6 @@ bool lightMatrix[beatsCount][6] = {
   {1, 0, 0, 1, 0, 0}, // beat 20
 };
 
-
 void setup() {
 	pinMode(buttonPin, INPUT);
 	pinMode(trafficLight1G, OUTPUT);
@@ -87,7 +86,6 @@ void loop() {
     trafficLightSwitcher(lightMatrix[i]);
 
     int delayOnBeat = beats[i];
-
     Serial.println("Beat number: ");
     Serial.println(i);
     Serial.println("Waiting: ");
