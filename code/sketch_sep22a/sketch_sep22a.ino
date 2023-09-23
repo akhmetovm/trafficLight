@@ -81,25 +81,37 @@ void trafficLightSwitcher(bool sw[]) {
 }
 
 void loop() {
-  int pedestrainDelay = 0;
+  bool pedestrainOn = 0;
   for (int i = 0; i < beatsCount; i++)
   {
     trafficLightSwitcher(lightMatrix[i]);
 
     int delayOnBeat = beats[i];
-    if  ((i == 9 || i == 19)) {
-        delayOnBeat = delayOnBeat + pedestrainDelay;
-        pedestrainDelay = 0;
-    }
+
     Serial.println("Beat number: ");
     Serial.println(i);
     Serial.println("Waiting: ");
     Serial.println(delayOnBeat);
     for (int j = 0; j <= delayOnBeat; j = j + 10) {
       if  (buttonReadOnce()) { 
-        pedestrainDelay = 5000;
+        pedestrainOn = true;
       } 
       delay(10);
+    }
+    if  (pedestrainOn & (i == 9 || i == 19)) {
+      for(int t = 0; t < 4; t++) {
+        tone(speakerPin, 987);
+        delay(500);
+        noTone(speakerPin);
+        delay(500);
+      }
+      for(int t = 0; t < 4; t++) {
+        tone(speakerPin, 987);
+        delay(250);
+        noTone(speakerPin);
+        delay(250);
+      }
+      pedestrainOn = 0;
     }
     noTone(speakerPin);
   }
